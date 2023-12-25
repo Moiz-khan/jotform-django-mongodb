@@ -15,6 +15,7 @@
                     if ( "{{ question_data.0.type }}" == "input"){
                         
                         var h3Element = $("<h3>").text("{{ question_data.0.value }}");
+                        
                         $('#form').append(h3Element);
 
                         var inputElement = document.createElement('input');
@@ -33,18 +34,15 @@
 
                         var selectElement = document.createElement('select');
                         selectElement.id = `select-${count}`;
+                       
+                        var opt = "{{ question_data.0.value|safe }}";
+                        {% for item in question_data.0.value %}
+                            var option = document.createElement('option');
+                            option.value = "{{ item }}";
+                            option.text = "{{ item }}";
+                            selectElement.add(option);
 
-                        // Add options to the select element
-                        var option1 = document.createElement('option');
-                        option1.value = "{{ question_data.0.value.0 }}";
-                        option1.text = "{{ question_data.0.value.0 }}";
-                        selectElement.add(option1);
-
-                        var option2 = document.createElement('option');
-                        option2.value = "{{ question_data.0.value.1 }}";
-                        option2.text = "{{ question_data.0.value.1 }}";
-                        selectElement.add(option2);
-
+                        {% endfor %}
                         // Create a div element and append the h2 element, select element, and input element
                         var divElement = $("<div>").append(h3Element, selectElement).attr("id", "div-" + count);
 
@@ -54,6 +52,22 @@
                         // Increment the count
                         count = count + 1;
 
+                    }
+                    else if ( "{{ question_data.0.type }}" == "description"){
+                        var h3Element = $("<h3>").text("{{ question_data.0.value }}");
+                        
+                        $('#form').append(h3Element);
+
+                        var textareaElement = document.createElement('textarea');
+
+                        textareaElement.id = `answer-${count}`;
+                        textareaElement.placeholder = 'Enter Answer';
+                        textareaElement.rows = 4;
+                        textareaElement.cols = 50; 
+
+                        var divElement = $("<div>").append(h3Element, textareaElement).attr("id", "div-" + count);
+                        $("#form").append(divElement);
+                        count =count +1;
                     }
                 {% endfor %}
 
@@ -98,6 +112,10 @@
                 }
                 final_data["app_id"] = 118;
                 final_data["answer"] = answer;
+
+                var formIdElement = document.getElementById('form');
+                
+                
                 var dynamicPath = "{% url 'save_response' %}";
                 fetch(dynamicPath, {
                     method: 'POST',
@@ -108,7 +126,8 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                console.log('Data saved successfully:', data);
+                    var divElement = $("<div>").text("Form Submitted Successfully");    
+                    $('#form').append(divElement);
                 })
                 .catch(error => {
                 console.error('Error saving data:', error);

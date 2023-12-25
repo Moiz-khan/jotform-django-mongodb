@@ -8,7 +8,7 @@
 
 {% block content %}
 <h1>Your Template Preview</h1>
-
+<div class="cards-container">
 {% for template in data %}
     <div class="card mb-3 template-box clickable" id="template-{{ forloop.counter }}" form-id="{{ template.form_id }}">
         <div class="card-body">
@@ -17,6 +17,7 @@
         </div>
     </div>
 {% endfor %}
+</div>
 {% endblock content %}
 
     

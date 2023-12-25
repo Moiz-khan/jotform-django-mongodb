@@ -8,7 +8,7 @@
 
 .container {
     position: relative;
-    height: 300px;
+    height: auto;
     /* Set the height of your container */
     border: 1px solid #ccc;
 
